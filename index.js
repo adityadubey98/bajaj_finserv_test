@@ -1,28 +1,34 @@
 const express = require('express');
+const path = require('path'); // Import the 'path' module
 const app = express();
 
-// Middleware to parse JSON bodies
 app.use(express.json());
 
-// Define the port the server will run on
 const PORT = process.env.PORT || 3000;
 
-// Define the POST route for /bfhl
+// --- NEW ---
+// Serve the index.html file on the root route
+app.get('/', (req, res) => {
+    // The path.join() method joins all given path segments together
+    // __dirname is the directory name of the current module
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Your existing POST route for the API logic
 app.post('/bfhl', (req, res) => {
     try {
         const { data } = req.body;
 
-        // Gracefully handle cases where 'data' is missing or not an array
         if (!data || !Array.isArray(data)) {
             return res.status(400).json({
                 is_success: false,
-                user_id: "your_full_name_ddmmyyyy", // Replace with your details
+                user_id: "your_full_name_ddmmyyyy",
                 message: "Invalid input: 'data' key with an array is required."
             });
         }
 
         // --- ✏️ UPDATE THESE VALUES ---
-        const user_id = "shivam_singh_29082002"; // Format: {full_name_ddmmyyyy}
+        const user_id = "shivam_singh_29082002";
         const email = "shivam.singh2020@vitbhopal.ac.in";
         const roll_number = "20BCE10738";
         // ---------------------------
@@ -34,10 +40,8 @@ app.post('/bfhl', (req, res) => {
         let sum = 0;
         let alphabet_string = "";
 
-        // Process each item in the input data array
         data.forEach(item => {
-            const itemStr = String(item); 
-
+            const itemStr = String(item);
             if (/^-?\d+$/.test(itemStr)) {
                 const num = parseInt(itemStr, 10);
                 sum += num;
